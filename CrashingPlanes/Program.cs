@@ -9,14 +9,23 @@ namespace CrashingPlanes
 
 		public static void Main(string[] args)
 		{
-			var planes = 10;
+			var planes = new int[]{ 10, 20, 30, 40};
 			var maneuvers = 7;
 
+			foreach (var plane in planes)
+			{
+				SolvePlanes(plane, maneuvers);
+			}
+		}
+
+		static void SolvePlanes(int planes, int maneuvers)
+		{
+			Console.WriteLine($"\nSolving MIP for n={planes} and m={maneuvers}");
 			Cplex cplex = new Cplex();
 
 			var (var, rng) = PopulateByRow(cplex, planes, maneuvers);
 
-			cplex.ExportModel("lpex1.lp");
+			cplex.ExportModel($"lpex_{planes}_{maneuvers}.lp");
 
 			if (cplex.Solve())
 			{
@@ -26,14 +35,14 @@ namespace CrashingPlanes
 				//cplex.Output().WriteLine("Solution value  = " + cplex.ObjValue);
 
 				Console.WriteLine("\nRows - planes.\nColumns - maneuvers");
-				
-				for(int plane = 0; plane < planes; plane++)
+
+				for (int plane = 0; plane < planes; plane++)
 				{
 					Console.Write(plane + ": ");
-					for(int maneuver = 0; maneuver < maneuvers; maneuver++)
+					for (int maneuver = 0; maneuver < maneuvers; maneuver++)
 					{
 						var idx = plane * maneuvers + maneuver;
-						Console.Write(x[idx] + " ");
+						Console.Write( Math.Abs(x[idx]) + " ");
 
 					}
 					Console.WriteLine();
