@@ -32,7 +32,7 @@ namespace CrashingPlanes
 				double[] x = cplex.GetValues(var);
 
 				cplex.Output().WriteLine("Solution status = " + cplex.GetStatus());
-				//cplex.Output().WriteLine("Solution value  = " + cplex.ObjValue);
+				cplex.Output().WriteLine("Solution value  = " + cplex.ObjValue);
 
 				Console.WriteLine("\nRows - planes.\nColumns - maneuvers");
 
@@ -115,9 +115,25 @@ namespace CrashingPlanes
 				rng[i] = model.AddLe(collisionConstraints[i], 1, $"col_{i}");
 			}
 
+			AddOptimization(model, planes, maneuvers, variables);
+			//model.AddMinimize();
 
-			model.AddMinimize();
 			return (variables, rng);
+		}
+
+		static void AddOptimization(IMPModeler model, int planes, int maneuvers, INumVar[] variables)
+		{
+			var coefficients = new List<int>();
+			for (int plane1 = 0; plane1 < planes; plane1++)
+			{
+				for (int manuver = 0; manuver < maneuvers; manuver++) {
+
+					coefficients.Add(manuver + 1);
+				}
+			}
+
+			var minimization = model.ScalProd(variables, coefficients.ToArray());
+			model.AddMinimize(minimization);
 		}
 
 		static int[][] ImportData(int planes, int maneuvers)
