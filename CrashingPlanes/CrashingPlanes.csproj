@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="ILOG.Concert">
       <HintPath>D:\Programy\IBM\ILOG\CPLEX_Studio_Community2211\cplex\bin\x64_win64\ILOG.Concert.dll</HintPath>
     </Reference>
